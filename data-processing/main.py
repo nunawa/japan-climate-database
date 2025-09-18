@@ -48,6 +48,13 @@ def query_monthly_yearly(relation: DuckDBPyRelation, element_number):
     ).filter(f"element_number == {element_number}")
 
 
+def convert_all_none_to_none(x: tuple | list):
+    if set(x) == {None}:
+        return None
+    else:
+        return x
+
+
 def create_daily_weather_object():
     csv_files = jma_normal_dir.joinpath("daily").glob("nml_amd_d_*.csv")
 
@@ -73,17 +80,17 @@ def create_daily_weather_object():
         temperature = {}
         result = query_daily(daily, "0500").fetchall()
         for month in result:
-            temperature[month[1]] = month[2:]
+            temperature[month[1]] = convert_all_none_to_none(month[2:])
 
         precipitation = {}
         result = query_daily(daily, "4000").fetchall()
         for month in result:
-            precipitation[month[1]] = month[2:]
+            precipitation[month[1]] = convert_all_none_to_none(month[2:])
 
         sunshine_duration = {}
         result = query_daily(daily, "3500").fetchall()
         for month in result:
-            sunshine_duration[month[1]] = month[2:]
+            sunshine_duration[month[1]] = convert_all_none_to_none(month[2:])
 
         station_number = csv.stem.split("_")[-1]
         weather_data[station_number] = {
@@ -127,9 +134,11 @@ def create_monthly_yearly_weather_object():
         station_number = csv.stem.split("_")[-1]
         weather_data[station_number] = {
             "monthly": {
-                "temperature": raw_temperature[0][1:-2],
-                "precipitation": raw_precipitation[0][1:-2],
-                "sunshine_duration": raw_sunshine_duration[0][1:-2],
+                "temperature": convert_all_none_to_none(raw_temperature[0][1:-2]),
+                "precipitation": convert_all_none_to_none(raw_precipitation[0][1:-2]),
+                "sunshine_duration": convert_all_none_to_none(
+                    raw_sunshine_duration[0][1:-2]
+                ),
             },
             "yearly": {
                 "temperature": raw_temperature[0][-1],
