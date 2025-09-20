@@ -124,6 +124,16 @@ def download_env_wbgt(start_year=2020, end_year=2024):
                 time.sleep(download_delay)
                 continue
 
+            if r.status_code == 403:
+                print(f"Access forbidden: {url}")
+                time.sleep(download_delay)
+                continue
+
+            if r.text.startswith('<?xml version="1.0" encoding="UTF-8"?>'):
+                print(f"Invalid file: {url}")
+                time.sleep(download_delay)
+                continue
+
             with save_path.open("wb") as f:
                 f.write(r.content)
 
