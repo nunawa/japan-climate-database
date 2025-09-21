@@ -82,16 +82,22 @@ def create_daily_weather_object():
         result = query_daily(daily, "0500").fetchall()
         for month in result:
             temperature[month[1]] = convert_all_none_to_none(month[2:])
+        if set(temperature.values()) == {None}:
+            temperature = None
 
         precipitation = {}
         result = query_daily(daily, "4000").fetchall()
         for month in result:
             precipitation[month[1]] = convert_all_none_to_none(month[2:])
+        if set(precipitation.values()) == {None}:
+            precipitation = None
 
         sunshine_duration = {}
         result = query_daily(daily, "3500").fetchall()
         for month in result:
             sunshine_duration[month[1]] = convert_all_none_to_none(month[2:])
+        if set(sunshine_duration.values()) == {None}:
+            sunshine_duration = None
 
         station_number = csv.stem.split("_")[-1]
         weather_data[station_number] = {
