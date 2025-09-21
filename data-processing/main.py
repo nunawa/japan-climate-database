@@ -141,10 +141,10 @@ def create_monthly_yearly_normal_object():
         station_number = csv.stem.split("_")[-1]
         normal_data[station_number] = {
             "monthly": {
-                "temperature": convert_all_none_to_none(raw_temperature[0][1:-2]),
-                "precipitation": convert_all_none_to_none(raw_precipitation[0][1:-2]),
+                "temperature": convert_all_none_to_none(raw_temperature[0][1:-1]),
+                "precipitation": convert_all_none_to_none(raw_precipitation[0][1:-1]),
                 "sunshine_duration": convert_all_none_to_none(
-                    raw_sunshine_duration[0][1:-2]
+                    raw_sunshine_duration[0][1:-1]
                 ),
             },
             "yearly": {
