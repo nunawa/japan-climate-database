@@ -11,12 +11,12 @@ import requests
 from requests.adapters import HTTPAdapter, Retry
 
 raw_dir = Path(__file__).parents[1].joinpath("data", "raw")
-env_wbgt_dir = raw_dir.joinpath("env-wbgt")
+moe_wbgt_dir = raw_dir.joinpath("moe-wbgt")
 jma_normal_dir = raw_dir.joinpath("jma-normal")
 
 
 def prepare_directory():
-    env_wbgt_dir.mkdir(parents=True, exist_ok=True)
+    moe_wbgt_dir.mkdir(parents=True, exist_ok=True)
     jma_normal_dir.joinpath("daily").mkdir(parents=True, exist_ok=True)
     jma_normal_dir.joinpath("monthly").mkdir(parents=True, exist_ok=True)
     jma_normal_dir.joinpath("station").mkdir(parents=True, exist_ok=True)
@@ -68,8 +68,8 @@ def download_jma_normal():
         flatten_directory(save_dir.joinpath(key))
 
 
-def download_env_wbgt(start_year=2020, end_year=2024):
-    save_dir = env_wbgt_dir
+def download_moe_wbgt(start_year=2020, end_year=2024):
+    save_dir = moe_wbgt_dir
     # 連続アクセスを避けるための待機時間（秒）
     download_delay = 3
 
@@ -144,7 +144,7 @@ def download_env_wbgt(start_year=2020, end_year=2024):
 def main():
     prepare_directory()
     download_jma_normal()
-    download_env_wbgt()
+    download_moe_wbgt()
 
 
 if __name__ == "__main__":

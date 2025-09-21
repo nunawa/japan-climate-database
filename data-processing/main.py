@@ -12,7 +12,7 @@ from duckdb import (
 
 data_dir = Path(__file__).parents[1].joinpath("data")
 processed_dir = data_dir.joinpath("processed")
-env_wbgt_dir = data_dir.joinpath("raw", "env-wbgt")
+moe_wbgt_dir = data_dir.joinpath("raw", "moe-wbgt")
 jma_normal_dir = data_dir.joinpath("raw", "jma-normal")
 
 
@@ -159,7 +159,7 @@ def create_monthly_yearly_weather_object():
 
 
 def create_daily_wbgt_object():
-    dirs = [x for x in env_wbgt_dir.glob("*") if x.is_dir()]
+    dirs = [x for x in moe_wbgt_dir.glob("*") if x.is_dir()]
 
     wbgt_data = {}
     for dir in dirs:
@@ -224,7 +224,7 @@ def create_daily_wbgt_object():
 
 
 def create_monthly_yearly_wbgt_object():
-    dirs = [x for x in env_wbgt_dir.glob("*") if x.is_dir()]
+    dirs = [x for x in moe_wbgt_dir.glob("*") if x.is_dir()]
 
     wbgt_data = {}
     for dir in dirs:
