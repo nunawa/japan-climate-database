@@ -14,4 +14,7 @@ export default {
   description: "Demo showcasing Vike",
 
   extends: vikeReact,
+
+  prerender: true,
+  ssr: false
 } satisfies Config;
