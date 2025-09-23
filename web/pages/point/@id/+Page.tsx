@@ -1,4 +1,6 @@
-import { Container, Table } from "@mantine/core";
+import { BarChart, LineChart } from "@mantine/charts";
+import { Container } from "@mantine/core";
+import { ReferenceArea } from "recharts";
 import { usePageContext } from "vike-react/usePageContext";
 import type { PageContext } from "../types";
 
@@ -11,34 +13,89 @@ function Wbgt(wbgtData: PageContext["data"]["wbgt"]) {
     );
   }
 
-  const rows = Object.entries(wbgtData.daily).map(
-    ([date, { min, max, avg }]) => (
-      <Table.Tr key={date}>
-        <Table.Td>{date}</Table.Td>
-        <Table.Td>{min}</Table.Td>
-        <Table.Td>{max}</Table.Td>
-        <Table.Td>{avg}</Table.Td>
-      </Table.Tr>
-    ),
-  );
-
   return (
     <Container>
       <h1>WBGT Data</h1>
       <h2>Daily WBGT</h2>
-      <Table.ScrollContainer minWidth={500} maxHeight={300}>
-        <Table>
-          <Table.Thead>
-            <Table.Tr>
-              <Table.Th>Date</Table.Th>
-              <Table.Th>min</Table.Th>
-              <Table.Th>max</Table.Th>
-              <Table.Th>avg</Table.Th>
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>{rows}</Table.Tbody>
-        </Table>
-      </Table.ScrollContainer>
+      <LineChart
+        h={300}
+        data={Object.entries(wbgtData.daily).map(
+          ([date, { min, max, avg }]) => ({ date, min, max, avg }),
+        )}
+        series={[
+          { name: "min", color: "blue" },
+          { name: "max", color: "red" },
+          { name: "avg", color: "gray" },
+        ]}
+        dataKey="date"
+        curveType="monotone"
+        gridProps={{ yAxisId: "left" }}
+        withDots={false}
+      >
+        <ReferenceArea
+          y2={21}
+          yAxisId="left"
+          label={{
+            value: "ほぼ安全",
+            position: "middle",
+            fontSize: 12,
+            fill: "var(--mantine-color-dimmed)",
+          }}
+          fill="#218cff"
+          fillOpacity={0.15}
+        />
+        <ReferenceArea
+          y1={21}
+          y2={25}
+          yAxisId="left"
+          label={{
+            value: "注意",
+            position: "middle",
+            fontSize: 12,
+            fill: "var(--mantine-color-dimmed)",
+          }}
+          fill="#a0d2ff"
+          fillOpacity={0.15}
+        />
+        <ReferenceArea
+          y1={25}
+          y2={28}
+          yAxisId="left"
+          label={{
+            value: "警戒",
+            position: "middle",
+            fontSize: 12,
+            fill: "var(--mantine-color-dimmed)",
+          }}
+          fill="#faf500"
+          fillOpacity={0.15}
+        />
+        <ReferenceArea
+          y1={28}
+          y2={31}
+          yAxisId="left"
+          label={{
+            value: "厳重警戒",
+            position: "middle",
+            fontSize: 12,
+            fill: "var(--mantine-color-dimmed)",
+          }}
+          fill="#ff9600"
+          fillOpacity={0.15}
+        />
+        <ReferenceArea
+          y1={31}
+          yAxisId="left"
+          label={{
+            value: "危険",
+            position: "middle",
+            fontSize: 12,
+            fill: "var(--mantine-color-dimmed)",
+          }}
+          fill="#ff2800"
+          fillOpacity={0.15}
+        />
+      </LineChart>
       <h2>Yearly WBGT</h2>
       <p>{wbgtData.yearly}</p>
     </Container>
@@ -46,69 +103,117 @@ function Wbgt(wbgtData: PageContext["data"]["wbgt"]) {
 }
 
 function Normal(normalData: PageContext["data"]["normal"]) {
-  let dailyTemperatureTable = (
+  let dailyTemperatureChart = (
     <p>No daily temperature data available for this point.</p>
   );
   const dailyTemperature = normalData.daily.temperature;
   if (dailyTemperature) {
-    const rows = [];
+    const data = [];
     for (const [month, temperatures] of Object.entries(dailyTemperature)) {
       if (!temperatures) continue;
       for (let i = 0; i < temperatures.length; i++) {
         const temperature = temperatures[i];
         if (temperature === null) continue;
-        rows.push(
-          <Table.Tr key={`${month}-${i + 1}`}>
-            <Table.Td>{`${month}/${i + 1}`}</Table.Td>
-            <Table.Td>{temperature}</Table.Td>
-          </Table.Tr>,
-        );
+        data.push({ date: `${month}/${i + 1}`, temperature });
       }
     }
 
-    dailyTemperatureTable = (
-      <Table.ScrollContainer minWidth={500} maxHeight={300}>
-        <Table>
-          <Table.Thead>
-            <Table.Tr>
-              <Table.Th>Date</Table.Th>
-              <Table.Th>temperature</Table.Th>
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>{rows}</Table.Tbody>
-        </Table>
-      </Table.ScrollContainer>
+    dailyTemperatureChart = (
+      <LineChart
+        h={300}
+        data={data}
+        series={[{ name: "temperature", color: "red" }]}
+        dataKey="date"
+        curveType="monotone"
+        gridProps={{ yAxisId: "left" }}
+        withDots={false}
+      >
+        <ReferenceArea
+          y2={24}
+          yAxisId="left"
+          label={{
+            value: "ほぼ安全",
+            position: "middle",
+            fontSize: 12,
+            fill: "var(--mantine-color-dimmed)",
+          }}
+          fill="#218cff"
+          fillOpacity={0.15}
+        />
+        <ReferenceArea
+          y1={24}
+          y2={28}
+          yAxisId="left"
+          label={{
+            value: "注意",
+            position: "middle",
+            fontSize: 12,
+            fill: "var(--mantine-color-dimmed)",
+          }}
+          fill="#a0d2ff"
+          fillOpacity={0.15}
+        />
+        <ReferenceArea
+          y1={28}
+          y2={31}
+          yAxisId="left"
+          label={{
+            value: "警戒",
+            position: "middle",
+            fontSize: 12,
+            fill: "var(--mantine-color-dimmed)",
+          }}
+          fill="#faf500"
+          fillOpacity={0.15}
+        />
+        <ReferenceArea
+          y1={31}
+          y2={35}
+          yAxisId="left"
+          label={{
+            value: "厳重警戒",
+            position: "middle",
+            fontSize: 12,
+            fill: "var(--mantine-color-dimmed)",
+          }}
+          fill="#ff9600"
+          fillOpacity={0.15}
+        />
+        <ReferenceArea
+          y1={35}
+          yAxisId="left"
+          label={{
+            value: "危険",
+            position: "middle",
+            fontSize: 12,
+            fill: "var(--mantine-color-dimmed)",
+          }}
+          fill="#ff2800"
+          fillOpacity={0.15}
+        />
+      </LineChart>
     );
   }
 
-  let monthlyPrecipitationTable = (
+  let monthlyPrecipitationChart = (
     <p>No monthly precipitation data available for this point.</p>
   );
   const monthlyPrecipitation = normalData.monthly.precipitation;
   if (monthlyPrecipitation) {
-    const rows = [];
+    const data = [];
     for (let i = 0; i < monthlyPrecipitation.length; i++) {
       const precipitation = monthlyPrecipitation[i];
-      rows.push(
-        <Table.Tr key={i + 1}>
-          <Table.Td>{i + 1}</Table.Td>
-          <Table.Td>{precipitation}</Table.Td>
-        </Table.Tr>,
-      );
+      data.push({ month: i + 1, precipitation });
     }
 
-    monthlyPrecipitationTable = (
-      <Table.ScrollContainer minWidth={500} maxHeight={300}>
-        <Table>
-          <Table.Thead>
-            <Table.Tr>
-              <Table.Th>Month</Table.Th>
-              <Table.Th>precipitation</Table.Th>
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>{rows}</Table.Tbody>
-        </Table>
-      </Table.ScrollContainer>
+    monthlyPrecipitationChart = (
+      <BarChart
+        h={300}
+        data={data}
+        series={[{ name: "precipitation", color: "blue" }]}
+        dataKey="month"
+        gridProps={{ yAxisId: "left" }}
+      />
     );
   }
 
@@ -116,9 +221,9 @@ function Normal(normalData: PageContext["data"]["normal"]) {
     <Container>
       <h1>Climatological Normals Data</h1>
       <h2>Daily Temperature</h2>
-      {dailyTemperatureTable}
+      {dailyTemperatureChart}
       <h2>Monthly Precipitation</h2>
-      {monthlyPrecipitationTable}
+      {monthlyPrecipitationChart}
       <h2>Yearly Summary</h2>
       <p>temperature: {normalData.yearly.temperature}</p>
       <p>precipitation: {normalData.yearly.precipitation}</p>
