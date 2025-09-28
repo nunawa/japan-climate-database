@@ -14,6 +14,7 @@ data_dir = Path(__file__).parents[1].joinpath("data")
 processed_dir = data_dir.joinpath("processed")
 moe_wbgt_dir = data_dir.joinpath("raw", "moe-wbgt")
 jma_normal_dir = data_dir.joinpath("raw", "jma-normal")
+jma_station_dir = data_dir.joinpath("raw", "jma-station")
 
 
 def build_case_expression(prefix, index=None, alias=None, scale=10):
@@ -266,6 +267,94 @@ def create_monthly_yearly_wbgt_object():
     return wbgt_data
 
 
+# amdmaster.index4.csvの2行目が列の単位を示す行になっており、
+# DuckDBで読み込むときに邪魔になるので削除する。
+def ensure_cleaned_amdmaster_index():
+    src = jma_station_dir.joinpath("amdmaster.index4.csv")
+    dst = jma_station_dir.joinpath("amdmaster.index4.cleaned.csv")
+
+    if dst.exists():
+        return dst
+
+    with open(src, encoding="utf-8") as old, open(dst, "w", encoding="utf-8") as new:
+        for i, line in enumerate(old):
+            if i == 1:
+                continue
+            new.write(line)
+
+    return dst
+
+
+def create_station_index_object():
+    amdmaster_index = ensure_cleaned_amdmaster_index()
+    amdmaster_index = duckdb.read_csv(amdmaster_index, normalize_names=True).set_alias(
+        "amdmaster_index"
+    )
+
+    station_list = (
+        amdmaster_index.select(
+            "station_number",
+            SQLExpression("trim(station_name)").alias("station_name"),
+            SQLExpression("trim(Latitude_Precipitation)").alias(
+                "Latitude_Precipitation"
+            ),
+            SQLExpression("trim(Longitude_Precipitation)").alias(
+                "Longitude_Precipitation"
+            ),
+            SQLExpression("trim(Latitude_Snow)").alias("Latitude_Snow"),
+            SQLExpression("trim(Longitude_Snow)").alias("Longitude_Snow"),
+            "end_date",
+        )
+        .select(
+            "station_number",
+            "station_name",
+            CaseExpression(
+                condition=(
+                    SQLExpression("Latitude_Precipitation") == ConstantExpression("")
+                ),
+                value=ColumnExpression("Latitude_Snow"),
+            )
+            .otherwise(ColumnExpression("Latitude_Precipitation"))
+            .alias("latitude"),
+            CaseExpression(
+                condition=(
+                    SQLExpression("Longitude_Precipitation") == ConstantExpression("")
+                ),
+                value=ColumnExpression("Longitude_Snow"),
+            )
+            .otherwise(ColumnExpression("Longitude_Precipitation"))
+            .alias("longitude"),
+            "end_date",
+        )
+        .aggregate(
+            aggr_expr=[
+                "station_number",
+                SQLExpression("max_by(station_name, end_date)").alias("station_name"),
+                SQLExpression("cast(max_by(latitude, end_date) as float)").alias(
+                    "latitude"
+                ),
+                SQLExpression("cast(max_by(longitude, end_date) as float)").alias(
+                    "longitude"
+                ),
+                SQLExpression("max(end_date)").alias("end_date"),
+            ],
+            group_expr="station_number",
+        )
+        .order("station_number")
+        .fetchall()
+    )
+
+    station_index = {}
+    for station in station_list:
+        station_index[station[0]] = {
+            "station_name": str(station[1]).strip(),
+            "latitude": station[2],
+            "longitude": station[3],
+        }
+
+    return station_index
+
+
 def main():
     with open(processed_dir.joinpath("daily_normal.json"), "w") as f:
         json.dump(create_daily_normal_object(), f, indent=2)
@@ -278,6 +367,9 @@ def main():
 
     with open(processed_dir.joinpath("monthly_yearly_wbgt.json"), "w") as f:
         json.dump(create_monthly_yearly_wbgt_object(), f, indent=2)
+
+    with open(processed_dir.joinpath("station_index.json"), "w") as f:
+        json.dump(create_station_index_object(), f, indent=2, ensure_ascii=False)
 
 
 if __name__ == "__main__":
