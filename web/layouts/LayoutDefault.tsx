@@ -1,5 +1,6 @@
 import "@mantine/core/styles.css";
 import '@mantine/charts/styles.css';
+import "maplibre-gl/dist/maplibre-gl.css"
 
 import logoUrl from "../assets/logo.svg";
 import { AppShell, Burger, Group, Image, MantineProvider } from "@mantine/core";
