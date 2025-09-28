@@ -13,6 +13,7 @@ from requests.adapters import HTTPAdapter, Retry
 raw_dir = Path(__file__).parents[1].joinpath("data", "raw")
 moe_wbgt_dir = raw_dir.joinpath("moe-wbgt")
 jma_normal_dir = raw_dir.joinpath("jma-normal")
+jma_station_dir = raw_dir.joinpath("jma-station")
 
 
 def prepare_directory():
@@ -20,6 +21,7 @@ def prepare_directory():
     jma_normal_dir.joinpath("daily").mkdir(parents=True, exist_ok=True)
     jma_normal_dir.joinpath("monthly").mkdir(parents=True, exist_ok=True)
     jma_normal_dir.joinpath("station").mkdir(parents=True, exist_ok=True)
+    jma_station_dir.mkdir(parents=True, exist_ok=True)
 
 
 def flatten_directory(source_dir, target_dir=None):
@@ -66,6 +68,19 @@ def download_jma_normal():
         os.remove(zip_file)
 
         flatten_directory(save_dir.joinpath(key))
+
+
+def download_jma_station():
+    save_dir = jma_station_dir
+    url = "https://www.data.jma.go.jp/stats/data/mdrr/chiten/meta/amdmaster.index4"
+
+    r = requests.get(url, timeout=5)
+
+    filename = os.path.basename(url)
+    save_path = save_dir.joinpath(f"{filename}.csv")
+
+    with save_path.open("w", encoding="utf-8") as f:
+        f.write(r.text)
 
 
 def download_moe_wbgt(start_year=2020, end_year=2024):
@@ -144,6 +159,7 @@ def download_moe_wbgt(start_year=2020, end_year=2024):
 def main():
     prepare_directory()
     download_jma_normal()
+    download_jma_station()
     download_moe_wbgt()
 
 
