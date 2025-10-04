@@ -11,6 +11,8 @@
     "@mantine/core": "^8.2.8",
     "@mantine/hooks": "^8.2.8",
     "@vitejs/plugin-react": "^5.0.2",
+    "clsx": "^2.1.1",
+    "mantine-datatable": "^8.2.0",
     "maplibre-gl": "^5.7.3",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
