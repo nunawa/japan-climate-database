@@ -1,5 +1,6 @@
 import "@mantine/core/styles.css";
 import '@mantine/charts/styles.css';
+import "mantine-datatable/styles.layer.css"
 import "maplibre-gl/dist/maplibre-gl.css"
 
 import logoUrl from "../assets/logo.svg";
