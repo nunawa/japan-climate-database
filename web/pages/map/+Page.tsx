@@ -162,7 +162,7 @@ function NormalMap({ data }: { data: PageContext["data"] }) {
         >
           <div>
             <Anchor
-              href={`/point/${normalPopupInfo.station_number}`}
+              href={`/station/${normalPopupInfo.station_number}`}
               target="_blank"
               rel="noopener"
             >
@@ -306,7 +306,7 @@ function WbgtMap({ data }: { data: PageContext["data"] }) {
         >
           <div>
             <Anchor
-              href={`/point/${wbgtPopupInfo.station_number}`}
+              href={`/station/${wbgtPopupInfo.station_number}`}
               target="_blank"
               rel="noopener"
             >

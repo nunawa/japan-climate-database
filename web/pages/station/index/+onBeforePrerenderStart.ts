@@ -26,7 +26,7 @@ async function onBeforePrerenderStart(): Promise<Return[]> {
 
   const pointData: Return[] = [];
   for (const point of normalPoints) {
-    const url = "/point/" + point;
+    const url = "/station/" + point;
     const pageContext = {
       data: {
         wbgt: {

@@ -66,7 +66,7 @@ function TableTemplate({
           sortable: true,
           render: (object) => (
             <Anchor
-              href={`/point/${object.station_number}`}
+              href={`/station/${object.station_number}`}
               target="_blank"
               rel="noopener"
             >
