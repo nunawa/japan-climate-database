@@ -72,15 +72,40 @@ def download_jma_normal():
 
 def download_jma_station():
     save_dir = jma_station_dir
-    url = "https://www.data.jma.go.jp/stats/data/mdrr/chiten/meta/amdmaster.index4"
 
-    r = requests.get(url, timeout=5)
+    latest_index_url = "https://www.jma.go.jp/jma/kishou/know/amedas/ame_master.zip"
+    history_index_url = (
+        "https://www.data.jma.go.jp/stats/data/mdrr/chiten/meta/amdmaster.index4"
+    )
 
-    filename = os.path.basename(url)
-    save_path = save_dir.joinpath(f"{filename}.csv")
+    session = requests.Session()
 
-    with save_path.open("w", encoding="utf-8") as f:
-        f.write(r.text)
+    latest_index_r = session.get(latest_index_url, timeout=5)
+
+    latest_index = save_dir.joinpath(os.path.basename(latest_index_url))
+    with latest_index.open("wb") as f:
+        f.write(latest_index_r.content)
+
+    with zipfile.ZipFile(latest_index) as zf:
+        csv_list = [x for x in zf.namelist() if x.endswith(".csv")]
+        # CSVファイルが1つだけ含まれているはず
+        csv = csv_list[0]
+
+        zf.extract(csv, save_dir)
+
+    os.remove(latest_index)
+
+    # Shift_JISからUTF-8に変換
+    with open(save_dir.joinpath(csv), "r", encoding="cp932") as f:
+        content = f.read()
+    with open(save_dir.joinpath(csv), "w", encoding="utf-8") as f:
+        f.write(content)
+
+    history_index_r = session.get(history_index_url, timeout=5)
+
+    history_index = save_dir.joinpath(f"{os.path.basename(history_index_url)}.csv")
+    with history_index.open("w", encoding="utf-8") as f:
+        f.write(history_index_r.text)
 
 
 def download_moe_wbgt(start_year=2020, end_year=2024):
