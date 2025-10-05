@@ -285,29 +285,56 @@ def ensure_cleaned_amdmaster_index():
     return dst
 
 
+def get_latest_ame_master_index():
+    dir = jma_station_dir
+    files = list(dir.glob("ame_master_*.csv"))
+    files.sort()
+    return files[-1]
+
+
 def create_station_index_object():
-    amdmaster_index = ensure_cleaned_amdmaster_index()
-    amdmaster_index = duckdb.read_csv(amdmaster_index, normalize_names=True).set_alias(
-        "amdmaster_index"
+    history_index = ensure_cleaned_amdmaster_index()
+    history_index = duckdb.read_csv(history_index, normalize_names=True).set_alias(
+        "history_index"
     )
 
-    station_list = (
-        amdmaster_index.select(
+    latest_index = get_latest_ame_master_index()
+    latest_index = duckdb.read_csv(latest_index).set_alias("latest_index")
+
+    latest_index = latest_index.select(
+        SQLExpression("都府県振興局").alias("prefecture_subprefecture"),
+        SQLExpression("観測所番号").alias("station_number"),
+        SQLExpression("気象情報等に表記する名称").alias("long_name"),
+        SQLExpression("所在地").alias("address"),
+    )
+
+    history_index = (
+        history_index.select(
             "station_number",
             SQLExpression("trim(station_name)").alias("station_name"),
+            SQLExpression("trim(Station_Name_of_Snow)").alias("Station_Name_of_Snow"),
             SQLExpression("trim(Latitude_Precipitation)").alias(
                 "Latitude_Precipitation"
             ),
             SQLExpression("trim(Longitude_Precipitation)").alias(
                 "Longitude_Precipitation"
             ),
+            SQLExpression("trim(Altitude_Precipitation)").alias(
+                "Altitude_Precipitation"
+            ),
             SQLExpression("trim(Latitude_Snow)").alias("Latitude_Snow"),
             SQLExpression("trim(Longitude_Snow)").alias("Longitude_Snow"),
+            SQLExpression("trim(Altitude_Snow)").alias("Altitude_Snow"),
             "end_date",
         )
         .select(
             "station_number",
-            "station_name",
+            CaseExpression(
+                condition=(SQLExpression("station_name") == ConstantExpression("")),
+                value=ColumnExpression("Station_Name_of_Snow"),
+            )
+            .otherwise(ColumnExpression("station_name"))
+            .alias("station_name"),
             CaseExpression(
                 condition=(
                     SQLExpression("Latitude_Precipitation") == ConstantExpression("")
@@ -324,6 +351,14 @@ def create_station_index_object():
             )
             .otherwise(ColumnExpression("Longitude_Precipitation"))
             .alias("longitude"),
+            CaseExpression(
+                condition=(
+                    SQLExpression("Altitude_Precipitation") == ConstantExpression("")
+                ),
+                value=ColumnExpression("Altitude_Snow"),
+            )
+            .otherwise(ColumnExpression("Altitude_Precipitation"))
+            .alias("altitude"),
             "end_date",
         )
         .aggregate(
@@ -336,9 +371,30 @@ def create_station_index_object():
                 SQLExpression("cast(max_by(longitude, end_date) as float)").alias(
                     "longitude"
                 ),
+                SQLExpression("cast(max_by(altitude, end_date) as int)").alias(
+                    "altitude"
+                ),
                 SQLExpression("max(end_date)").alias("end_date"),
             ],
             group_expr="station_number",
+        )
+    )
+
+    station_list = (
+        history_index.join(
+            latest_index,
+            how="left",
+            condition="history_index.station_number = latest_index.station_number",
+        )
+        .select(
+            "history_index.station_number",
+            "station_name",
+            "latitude",
+            "longitude",
+            "altitude",
+            "prefecture_subprefecture",
+            "long_name",
+            "address",
         )
         .order("station_number")
         .fetchall()
@@ -347,9 +403,13 @@ def create_station_index_object():
     station_index = {}
     for station in station_list:
         station_index[station[0]] = {
-            "station_name": str(station[1]).strip(),
+            "station_name": station[1],
             "latitude": station[2],
             "longitude": station[3],
+            "altitude": station[4],
+            "prefecture_subprefecture": station[5],
+            "long_name": station[6],
+            "address": station[7],
         }
 
     return station_index
