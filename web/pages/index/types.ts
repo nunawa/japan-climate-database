@@ -27,6 +27,12 @@ export type Station = {
   value: number;
 };
 
+type RegionStations = {
+  id: string;
+  name: string;
+  prefecture: string;
+}[];
+
 export type PageContext = {
   data: {
     averages: {
@@ -48,9 +54,14 @@ export type PageContext = {
       wbgt: Station;
     };
     prefectural_capital_stations: {
-      prefecture: string;
-      name: string;
-      id: string;
-    }[];
+      北海道: RegionStations;
+      東北: RegionStations;
+      関東: RegionStations;
+      中部: RegionStations;
+      近畿: RegionStations;
+      中国: RegionStations;
+      四国: RegionStations;
+      九州: RegionStations;
+    };
   };
 };

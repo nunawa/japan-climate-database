@@ -1,5 +1,6 @@
 import {
   Anchor,
+  Box,
   Card,
   Container,
   SimpleGrid,
@@ -26,26 +27,40 @@ export function PrefectureStations({
           </Text>
         </Stack>
 
-        <SimpleGrid cols={{ base: 2, sm: 3, md: 4 }} spacing="sm">
-          {stations.map((station) => (
-            <Anchor
-              key={station.id}
-              href={`/station/${station.id}`}
-              style={{ textDecoration: "none" }}
-            >
-              <Card padding="sm" withBorder>
-                <Stack gap={4}>
-                  <Text size="xs" c="dimmed">
-                    {station.prefecture}
-                  </Text>
-                  <Text size="sm" fw={600}>
-                    {station.name}
-                  </Text>
-                </Stack>
-              </Card>
-            </Anchor>
-          ))}
-        </SimpleGrid>
+        <Box>
+          <Stack gap="lg">
+            {Object.entries(stations).map(([regionName, regionStations]) => (
+              <Stack key={regionName} gap="sm">
+                <Text size="sm" fw={600}>
+                  {regionName}
+                </Text>
+                <SimpleGrid
+                  cols={{ base: 2, sm: 3, md: 4, lg: 5 }}
+                  spacing="xs"
+                >
+                  {regionStations.map((station) => (
+                    <Anchor
+                      key={station.id}
+                      href={`/station/${station.id}`}
+                      style={{ textDecoration: "none" }}
+                    >
+                      <Card padding="xs" withBorder>
+                        <Stack gap={2}>
+                          <Text size="xs" c="dimmed">
+                            {station.prefecture}
+                          </Text>
+                          <Text size="sm" fw={600}>
+                            {station.name}
+                          </Text>
+                        </Stack>
+                      </Card>
+                    </Anchor>
+                  ))}
+                </SimpleGrid>
+              </Stack>
+            ))}
+          </Stack>
+        </Box>
       </Stack>
     </Container>
   );

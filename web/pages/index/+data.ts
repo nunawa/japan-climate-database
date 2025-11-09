@@ -15,55 +15,266 @@ const monthlyYearlyWbgt = _monthlyYearlyWbgt as unknown as MonthlyYearlyWbgt;
 const stationIndex = _stationIndex as unknown as StationIndex;
 
 // 47都道府県庁所在地の観測所ID
-const PREFECTURE_STATIONS = [
-  { prefecture: "北海道", name: "札幌", id: "14163" },
-  { prefecture: "青森県", name: "青森", id: "31312" },
-  { prefecture: "岩手県", name: "盛岡", id: "33431" },
-  { prefecture: "宮城県", name: "仙台", id: "34392" },
-  { prefecture: "秋田県", name: "秋田", id: "32402" },
-  { prefecture: "山形県", name: "山形", id: "35426" },
-  { prefecture: "福島県", name: "福島", id: "36127" },
-  { prefecture: "茨城県", name: "水戸", id: "40201" },
-  { prefecture: "栃木県", name: "宇都宮", id: "41277" },
-  { prefecture: "群馬県", name: "前橋", id: "42251" },
-  { prefecture: "埼玉県", name: "さいたま", id: "43241" },
-  { prefecture: "千葉県", name: "千葉", id: "45212" },
-  { prefecture: "東京都", name: "東京", id: "44132" },
-  { prefecture: "神奈川県", name: "横浜", id: "46106" },
-  { prefecture: "新潟県", name: "新潟", id: "54232" },
-  { prefecture: "富山県", name: "富山", id: "55102" },
-  { prefecture: "石川県", name: "金沢", id: "56227" },
-  { prefecture: "福井県", name: "福井", id: "57066" },
-  { prefecture: "山梨県", name: "甲府", id: "49142" },
-  { prefecture: "長野県", name: "長野", id: "48156" },
-  { prefecture: "岐阜県", name: "岐阜", id: "52586" },
-  { prefecture: "静岡県", name: "静岡", id: "50331" },
-  { prefecture: "愛知県", name: "名古屋", id: "51106" },
-  { prefecture: "三重県", name: "津", id: "53133" },
-  { prefecture: "滋賀県", name: "大津", id: "60216" },
-  { prefecture: "京都府", name: "京都", id: "61286" },
-  { prefecture: "大阪府", name: "大阪", id: "62078" },
-  { prefecture: "兵庫県", name: "神戸", id: "63518" },
-  { prefecture: "奈良県", name: "奈良", id: "64036" },
-  { prefecture: "和歌山県", name: "和歌山", id: "65042" },
-  { prefecture: "鳥取県", name: "鳥取", id: "69122" },
-  { prefecture: "島根県", name: "松江", id: "68132" },
-  { prefecture: "岡山県", name: "岡山", id: "66408" },
-  { prefecture: "広島県", name: "広島", id: "67437" },
-  { prefecture: "山口県", name: "山口", id: "81286" },
-  { prefecture: "徳島県", name: "徳島", id: "71106" },
-  { prefecture: "香川県", name: "高松", id: "72086" },
-  { prefecture: "愛媛県", name: "松山", id: "73166" },
-  { prefecture: "高知県", name: "高知", id: "74182" },
-  { prefecture: "福岡県", name: "福岡", id: "82182" },
-  { prefecture: "佐賀県", name: "佐賀", id: "74436" },
-  { prefecture: "長崎県", name: "長崎", id: "84496" },
-  { prefecture: "熊本県", name: "熊本", id: "86141" },
-  { prefecture: "大分県", name: "大分", id: "83216" },
-  { prefecture: "宮崎県", name: "宮崎", id: "87376" },
-  { prefecture: "鹿児島県", name: "鹿児島", id: "88317" },
-  { prefecture: "沖縄県", name: "那覇", id: "91197" },
-];
+const PREFECTURE_STATIONS = {
+  北海道: [
+    {
+      prefecture: "北海道",
+      name: "札幌",
+      id: "14163",
+    },
+  ],
+
+  東北: [
+    {
+      prefecture: "青森県",
+      name: "青森",
+      id: "31312",
+    },
+    {
+      prefecture: "岩手県",
+      name: "盛岡",
+      id: "33431",
+    },
+    {
+      prefecture: "秋田県",
+      name: "秋田",
+      id: "32402",
+    },
+    {
+      prefecture: "宮城県",
+      name: "仙台",
+      id: "34392",
+    },
+    {
+      prefecture: "山形県",
+      name: "山形",
+      id: "35426",
+    },
+    {
+      prefecture: "福島県",
+      name: "福島",
+      id: "36127",
+    },
+  ],
+
+  関東: [
+    {
+      prefecture: "茨城県",
+      name: "水戸",
+      id: "40201",
+    },
+    {
+      prefecture: "栃木県",
+      name: "宇都宮",
+      id: "41277",
+    },
+    {
+      prefecture: "群馬県",
+      name: "前橋",
+      id: "42251",
+    },
+    {
+      prefecture: "埼玉県",
+      name: "さいたま",
+      id: "43241",
+    },
+    {
+      prefecture: "千葉県",
+      name: "千葉",
+      id: "45212",
+    },
+    {
+      prefecture: "東京都",
+      name: "東京",
+      id: "44132",
+    },
+    {
+      prefecture: "神奈川県",
+      name: "横浜",
+      id: "46106",
+    },
+  ],
+
+  中部: [
+    {
+      prefecture: "山梨県",
+      name: "甲府",
+      id: "49142",
+    },
+    {
+      prefecture: "長野県",
+      name: "長野",
+      id: "48156",
+    },
+    {
+      prefecture: "新潟県",
+      name: "新潟",
+      id: "54232",
+    },
+    {
+      prefecture: "富山県",
+      name: "富山",
+      id: "55102",
+    },
+    {
+      prefecture: "石川県",
+      name: "金沢",
+      id: "56227",
+    },
+    {
+      prefecture: "福井県",
+      name: "福井",
+      id: "57066",
+    },
+    {
+      prefecture: "静岡県",
+      name: "静岡",
+      id: "50331",
+    },
+    {
+      prefecture: "愛知県",
+      name: "名古屋",
+      id: "51106",
+    },
+    {
+      prefecture: "岐阜県",
+      name: "岐阜",
+      id: "52586",
+    },
+  ],
+
+  近畿: [
+    {
+      prefecture: "三重県",
+      name: "津",
+      id: "53133",
+    },
+    {
+      prefecture: "滋賀県",
+      name: "大津",
+      id: "60216",
+    },
+    {
+      prefecture: "京都府",
+      name: "京都",
+      id: "61286",
+    },
+    {
+      prefecture: "大阪府",
+      name: "大阪",
+      id: "62078",
+    },
+    {
+      prefecture: "兵庫県",
+      name: "神戸",
+      id: "63518",
+    },
+    {
+      prefecture: "奈良県",
+      name: "奈良",
+      id: "64036",
+    },
+    {
+      prefecture: "和歌山県",
+      name: "和歌山",
+      id: "65042",
+    },
+  ],
+
+  中国: [
+    {
+      prefecture: "鳥取県",
+      name: "鳥取",
+      id: "69122",
+    },
+    {
+      prefecture: "島根県",
+      name: "松江",
+      id: "68132",
+    },
+    {
+      prefecture: "岡山県",
+      name: "岡山",
+      id: "66408",
+    },
+    {
+      prefecture: "広島県",
+      name: "広島",
+      id: "67437",
+    },
+    {
+      prefecture: "山口県",
+      name: "山口",
+      id: "81286",
+    },
+  ],
+
+  四国: [
+    {
+      prefecture: "香川県",
+      name: "高松",
+      id: "72086",
+    },
+    {
+      prefecture: "愛媛県",
+      name: "松山",
+      id: "73166",
+    },
+    {
+      prefecture: "徳島県",
+      name: "徳島",
+      id: "71106",
+    },
+    {
+      prefecture: "高知県",
+      name: "高知",
+      id: "74182",
+    },
+  ],
+
+  九州: [
+    {
+      prefecture: "福岡県",
+      name: "福岡",
+      id: "82182",
+    },
+    {
+      prefecture: "佐賀県",
+      name: "佐賀",
+      id: "74436",
+    },
+    {
+      prefecture: "長崎県",
+      name: "長崎",
+      id: "84496",
+    },
+    {
+      prefecture: "熊本県",
+      name: "熊本",
+      id: "86141",
+    },
+    {
+      prefecture: "大分県",
+      name: "大分",
+      id: "83216",
+    },
+    {
+      prefecture: "宮崎県",
+      name: "宮崎",
+      id: "87376",
+    },
+    {
+      prefecture: "鹿児島県",
+      name: "鹿児島",
+      id: "88317",
+    },
+    {
+      prefecture: "沖縄県",
+      name: "那覇",
+      id: "91197",
+    },
+  ],
+};
 
 function calculateAverage(values: number[]) {
   const sum = values.reduce((acc, val) => acc + val, 0);
