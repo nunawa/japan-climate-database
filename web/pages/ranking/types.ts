@@ -23,15 +23,11 @@ export type StationIndex = Record<
   string,
   {
     station_name: string;
+    latitude: number;
+    longitude: number;
+    altitude: number;
+    prefecture_subprefecture: string;
+    long_name: string;
+    address: string;
   }
 >;
-
-export type PageContext = {
-  data: {
-    station_number: number;
-    station_name: StationIndex[string]["station_name"];
-    yearly_temperature: MonthlyYearlyNormal[string]["yearly"]["temperature"];
-    yearly_precipitation: MonthlyYearlyNormal[string]["yearly"]["precipitation"];
-    yearly_wbgt: MonthlyYearlyWbgt[string]["yearly"] | null;
-  }[];
-};
