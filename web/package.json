@@ -1,7 +1,7 @@
 {
   "scripts": {
     "dev": "vike dev",
-    "build": "vike build",
+    "build": "NODE_OPTIONS='--max-old-space-size=4096' vike build",
     "preview": "vike preview",
     "lint": "biome lint --write .",
     "format": "biome format --write ."
@@ -20,7 +20,8 @@
     "react-map-gl": "^8.0.4",
     "recharts": "^3.2.1",
     "vike": "^0.4.239",
-    "vike-react": "^0.6.5"
+    "vike-react": "^0.6.5",
+    "wrangler": "^4.51.0"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.3",
