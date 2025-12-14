@@ -23,6 +23,7 @@ export type Normal = {
   yearly: {
     temperature: MonthlyYearlyNormal[string]["yearly"]["temperature"];
     precipitation: MonthlyYearlyNormal[string]["yearly"]["precipitation"];
+    sunshine_duration: MonthlyYearlyNormal[string]["yearly"]["sunshine_duration"];
   };
 };
 

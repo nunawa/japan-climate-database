@@ -34,6 +34,8 @@ export async function data(): Promise<PageContext["data"]> {
           monthlyYearlyNormal[stationNumber]?.yearly.temperature || null,
         precipitation:
           monthlyYearlyNormal[stationNumber]?.yearly.precipitation || null,
+        sunshine_duration:
+          monthlyYearlyNormal[stationNumber]?.yearly.sunshine_duration || null,
       },
     },
     wbgt: {
