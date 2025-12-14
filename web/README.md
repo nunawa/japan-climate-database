@@ -1,68 +1,131 @@
-Generated with [vike.dev/new](https://vike.dev/new) ([version 475](https://www.npmjs.com/package/create-vike/v/0.0.475)) using this command:
+# Web Application
 
-```sh
-npm create vike@latest --- --react --mantine --biome
+Interactive website that visualizes climate data for Japan using Static Site Generation (SSG).
+
+## Tech Stack
+
+- **React 19**: UI framework
+- **TypeScript**: Type-safe development
+- **Vike**: SSG framework (formerly vite-plugin-ssr)
+- **Vite**: Build tool and dev server
+- **Mantine**: Component library and UI framework
+- **MapLibre GL JS**: Map rendering engine
+- **react-map-gl**: React wrapper for MapLibre
+- **Recharts**: Charting library for data visualization
+- **Biome**: Linter and formatter
+
+## Features
+
+### Station Detail Pages (`/station/:id`)
+
+- Temperature (daily, yearly)
+- Precipitation (monthly, yearly)
+- Sunshine duration (monthly, yearly)
+- WBGT (Wet Bulb Globe Temperature) (daily, yearly)
+- Interactive charts with Recharts
+
+### Map View (`/map`)
+
+- Interactive map visualization
+- Annual average overlays
+- Location markers with popup details
+
+### Ranking View (`/ranking`)
+
+- Sortable data tables
+- Top 10 highlights
+- Compare metrics across all stations
+
+## Directory Structure
+
+```
+web/
+├── assets/              # Static assets (logo, images)
+├── components/          # Shared React components
+├── layouts/             # Layout components and theme
+│   ├── LayoutDefault.tsx
+│   └── theme.ts
+├── pages/               # Vike pages (SSG)
+│   ├── about/          # About page
+│   ├── index/          # Home page
+│   ├── map/            # Map visualization
+│   ├── ranking/        # Ranking tables
+│   ├── station/        # Station details
+│   │   ├── @id/       # Dynamic station pages
+│   │   └── index/     # Station index
+│   └── _error/         # Error page
+└── dist/                # Build output (git-ignored)
+    └── client/         # Client-side bundle
 ```
 
-## Contents
+## Setup
 
-* [React](#react)
+Install dependencies:
 
-  * [`/pages/+config.ts`](#pagesconfigts)
-  * [Routing](#routing)
-  * [`/pages/_error/+Page.jsx`](#pages_errorpagejsx)
-  * [`/pages/+onPageTransitionStart.ts` and `/pages/+onPageTransitionEnd.ts`](#pagesonpagetransitionstartts-and-pagesonpagetransitionendts)
-  * [SSR](#ssr)
-  * [HTML Streaming](#html-streaming)
+```bash
+npm install
+```
 
-* [Mantine](#mantine)
+## Usage
 
-## React
+### Development Server
 
-This app is ready to start. It's powered by [Vike](https://vike.dev) and [React](https://react.dev/learn).
+Start local development server with hot reload:
 
-### `/pages/+config.ts`
+```bash
+npm run dev
+```
 
-Such `+` files are [the interface](https://vike.dev/config) between Vike and your code. It defines:
+Runs at `http://localhost:3000` by default.
 
-* A default [`<Layout>` component](https://vike.dev/Layout) (that wraps your [`<Page>` components](https://vike.dev/Page)).
-* A default [`title`](https://vike.dev/title).
-* Global [`<head>` tags](https://vike.dev/head-tags).
+### Production Build
 
-### Routing
+Build static site for production:
 
-[Vike's built-in router](https://vike.dev/routing) lets you choose between:
+```bash
+npm run build
+```
 
-* [Filesystem Routing](https://vike.dev/filesystem-routing) (the URL of a page is determined based on where its `+Page.jsx` file is located on the filesystem)
-* [Route Strings](https://vike.dev/route-string)
-* [Route Functions](https://vike.dev/route-function)
+Output generated in [`dist/`](dist/).
 
-### `/pages/_error/+Page.jsx`
+### Preview Build
 
-The [error page](https://vike.dev/error-page) which is rendered when errors occur.
+Preview production build locally:
 
-### `/pages/+onPageTransitionStart.ts` and `/pages/+onPageTransitionEnd.ts`
+```bash
+npm run preview
+```
 
-The [`onPageTransitionStart()` hook](https://vike.dev/onPageTransitionStart), together with [`onPageTransitionEnd()`](https://vike.dev/onPageTransitionEnd), enables you to implement page transition animations.
+## Development
 
-### SSR
+### Linting
 
-SSR is enabled by default. You can [disable it](https://vike.dev/ssr) for all your pages or only for some pages.
+```bash
+npx biome lint              # Check for issues
+npx biome lint --write      # Auto-fix issues
+```
 
-### HTML Streaming
+### Formatting
 
-You can enable/disable [HTML streaming](https://vike.dev/stream) for all your pages, or only for some pages while still using it for others.
+```bash
+npx biome format            # Check formatting
+npx biome format --write    # Format code
+```
 
-## Mantine
+## Data Source
 
-This is a boilerplate for Mantine based on the [Getting Started](https://mantine.dev/docs/getting-started/) guide.
+This application reads processed JSON files from [`../data/processed/`](../data/processed/):
 
-The following Packages are installed:
+- `station_index.json`: Station metadata
+- `daily_normal.json`: Daily climate normals
+- `monthly_yearly_normal.json`: Monthly/yearly climate normals
+- `daily_wbgt.json`: Daily WBGT values
+- `monthly_yearly_wbgt.json`: Monthly/yearly WBGT values
 
-* `@mantine/hooks` Hooks for state and UI management
-* `@mantine/core` Core components library: inputs, buttons, overlays, etc.
+See [data-processing/README.md](../data-processing/README.md) for data generation details.
 
-If you add more packages, make sure to update the `layouts/LayoutDefault.tsx` file to include the required CSSs.
+## Build Configuration
 
-The theme is defined in `layouts/theme.ts`.
-
+- Memory limit increased to 4GB for large dataset processing
+- SSG pre-renders all pages at build time
+- Cloudflare Pages deployment configured via [`wrangler.jsonc`](wrangler.jsonc)
