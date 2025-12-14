@@ -1,11 +1,11 @@
-import "@mantine/core/styles.css";
 import "@mantine/charts/styles.css";
+import "@mantine/core/styles.css";
 import "mantine-datatable/styles.layer.css";
 import "maplibre-gl/dist/maplibre-gl.css";
 
-import logoUrl from "../assets/logo.svg";
 import { AppShell, Burger, Group, Image, MantineProvider } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import logoUrl from "../assets/logo.svg";
 import { Link } from "../components/Link";
 import theme from "./theme.js";
 
@@ -22,18 +22,16 @@ export default function LayoutDefault({
         navbar={{
           width: 300,
           breakpoint: "sm",
-          collapsed: { mobile: !opened },
+          collapsed: {
+            desktop: !opened,
+            mobile: !opened,
+          },
         }}
         padding="md"
       >
         <AppShell.Header>
           <Group h="100%" px="md">
-            <Burger
-              opened={opened}
-              onClick={toggle}
-              hiddenFrom="sm"
-              size="sm"
-            />
+            <Burger opened={opened} onClick={toggle} size="sm" />
             <a href="/">
               {" "}
               <Image h={50} fit="contain" src={logoUrl} />{" "}
