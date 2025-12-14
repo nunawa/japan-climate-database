@@ -42,6 +42,7 @@ export default function LayoutDefault({
           <Link href="/" label="ホーム" onClick={toggle} />
           <Link href="/map" label="マップ" onClick={toggle} />
           <Link href="/ranking" label="ランキング" onClick={toggle} />
+          <Link href="/about" label="このサイトについて" onClick={toggle} />
         </AppShell.Navbar>
         <AppShell.Main> {children} </AppShell.Main>
       </AppShell>
