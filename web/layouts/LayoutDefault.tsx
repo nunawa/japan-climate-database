@@ -14,7 +14,7 @@ export default function LayoutDefault({
 }: {
   children: React.ReactNode;
 }) {
-  const [opened, { toggle }] = useDisclosure(false);
+  const [opened, { toggle }] = useDisclosure();
   return (
     <MantineProvider theme={theme}>
       <AppShell
@@ -41,9 +41,9 @@ export default function LayoutDefault({
           </Group>
         </AppShell.Header>
         <AppShell.Navbar p="md">
-          <Link href="/" label="ホーム" />
-          <Link href="/map" label="マップ" />
-          <Link href="/ranking" label="ランキング" />
+          <Link href="/" label="ホーム" onClick={toggle} />
+          <Link href="/map" label="マップ" onClick={toggle} />
+          <Link href="/ranking" label="ランキング" onClick={toggle} />
         </AppShell.Navbar>
         <AppShell.Main> {children} </AppShell.Main>
       </AppShell>
