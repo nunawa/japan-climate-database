@@ -10,11 +10,12 @@ export default {
   Layout,
 
   // https://vike.dev/head-tags
-  title: "My Vike App",
-  description: "Demo showcasing Vike",
+  title: "日本気候データベース | Japan Climate Database",
+  description:
+    "日本全国1300地点の気温・降水量・日照時間・WBGT（暑さ指数）を地図とグラフで比較。気象庁の平年値データを基にした気候統計サイト",
 
   extends: vikeReact,
 
   prerender: true,
-  ssr: false
+  ssr: false,
 } satisfies Config;
