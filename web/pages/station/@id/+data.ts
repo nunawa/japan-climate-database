@@ -11,6 +11,7 @@ import type {
   MonthlyYearlyWbgt,
   StationIndex,
 } from "../types";
+import { useConfig } from "vike-react/useConfig";
 
 const dailyNormal = _dailyNormal as DailyNormal;
 const monthlyYearlyNormal =
@@ -65,10 +66,16 @@ function calculateNationalAverages() {
 export type Data = Awaited<ReturnType<typeof data>>;
 
 export async function data(pageContext: PageContext) {
+  const config = useConfig();
+
   const stationId = pageContext.routeParams.id;
   const wbgtStations = Object.keys(monthlyYearlyWbgt);
   const station = stationIndex[stationId];
   const nationalAverages = calculateNationalAverages();
+
+  config({
+    title: `${station.prefecture_subprefecture} ${station.station_name}のデータ | 日本気候データベース`,
+  });
 
   return {
     stationInfo: {
