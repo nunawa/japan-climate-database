@@ -1,4 +1,4 @@
-# nunawa/weather-nunawa-net
+# nunawa/japan-climate-database
 
 ## Project Overview
 
