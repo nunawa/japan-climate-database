@@ -1,45 +1,66 @@
-# weather-nunawa-net
+# Japan Climate Database
 
-[![Lint and Format](https://github.com/nunawa/weather-nunawa-net/actions/workflows/lint-and-format.yml/badge.svg)](https://github.com/nunawa/weather-nunawa-net/actions/workflows/lint-and-format.yml)
-[![Netlify Status](https://api.netlify.com/api/v1/badges/aed1af11-5b5e-4f30-9b90-69239f0c5d33/deploy-status)](https://app.netlify.com/sites/weather-nunawa-net/deploys)
+A website that analyzes, organizes, and visualizes historical weather data for Japan.
 
-A website that visualizes Wet Bulb Globe Temperature (WBGT) in Japan on maps and graphs
+## Overview
 
-## Tech Stack
+This project processes weather data from Japanese governmental sources and presents it through an interactive web interface. The data includes temperature, precipitation, sunshine duration, and Wet Bulb Globe Temperature (WBGT) for approximately 1,300 locations across Japan.
 
-- [React](https://ja.react.dev/)
-- [Next.js](https://nextjs.org/)
-- [React Bootstrap](https://react-bootstrap.netlify.app/)
-- [React Leaflet](https://react-leaflet.js.org/)
-- [Recharts](https://recharts.org/en-US/)
-- [deck.gl](https://deck.gl/)
-- [chroma.js](https://gka.github.io/chroma.js/)
-- [MongoDB](https://www.mongodb.com/docs/drivers/node/current/)
+## Architecture
 
-## Run Locally
-
-Clone this repository
-
-```bash
-git clone https://github.com/nunawa/weather-nunawa-net.git
+```mermaid
+graph TD
+    A[JMA CSV Files<br/>Climate normals data<br/>~1,300 locations] --> C[&sol;data-processing<br/>Python + DuckDB]
+    B[MOE CSV Files<br/>WBGT data<br/>~840 locations] --> C
+    C --> D[&sol;data/processed<br/>JSON Files]
+    D --> E[&sol;web<br/>Vike SSG<br/>TypeScript + React]
+    E --> F[Static Website]
 ```
 
-Go to `weather-nunawa-net`
+## Directory Structure
 
-```bash
-cd weather-nunawa-net
+```text
+.
+├── data/                    # Weather data files
+│   ├── raw/                # Source CSV files from JMA and MOE (git-ignored)
+│   └── processed/          # Generated JSON files
+├── data-processing/        # Python scripts for data processing
+└── web/                    # Web application (Vike + React)
 ```
 
-Install dependencies
+### Components
+
+- **[data-processing/](data-processing/)**: Python-based data pipeline that downloads and processes weather data
+- **[web/](web/)**: React web application that visualizes the processed data
+
+### Data Sources
+
+- **JMA (Japan Meteorological Agency)**: Climate normals (2020 baseline) for temperature, precipitation, and sunshine duration
+- **MOE (Ministry of the Environment)**: WBGT (Wet Bulb Globe Temperature) data for heatstroke prevention
+
+## Quick Start
+
+### 1. Data Processing
+
+Process weather data from CSV to JSON format:
 
 ```bash
+cd data-processing
+uv sync
+uv run download.py  # Download source data
+uv run main.py      # Process data
+```
+
+See [data-processing/README.md](data-processing/README.md) for details.
+
+### 2. Web Application
+
+Run the website locally:
+
+```bash
+cd web
 npm install
-```
-
-Start the server
-
-```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result
+See [web/README.md](web/README.md) for details.

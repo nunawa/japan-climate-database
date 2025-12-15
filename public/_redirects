@@ -1,2 +1,0 @@
-# Redirect primary domain from subdomain
-https://japan-wbgt-visualized.netlify.app/*  https://weather.nunawa.net/:splat 301!

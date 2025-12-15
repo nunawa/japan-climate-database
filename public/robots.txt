@@ -1,9 +1,0 @@
-# *
-User-agent: *
-Allow: /
-
-# Host
-Host: https://weather.nunawa.net
-
-# Sitemaps
-Sitemap: https://weather.nunawa.net/sitemap.xml
