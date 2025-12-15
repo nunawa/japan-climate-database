@@ -28,6 +28,11 @@ graph TD
 └── web/                    # Web application (Vike + React)
 ```
 
+### Components
+
+- **[data-processing/](data-processing/)**: Python-based data pipeline that downloads and processes weather data
+- **[web/](web/)**: React web application that visualizes the processed data
+
 ### Data Sources
 
 - **JMA (Japan Meteorological Agency)**: Climate normals (2020 baseline) for temperature, precipitation, and sunshine duration
@@ -59,15 +64,3 @@ npm run dev
 ```
 
 See [web/README.md](web/README.md) for details.
-
-## Components
-
-- **[data-processing/](data-processing/)**: Python-based data pipeline that downloads and processes weather data
-- **[web/](web/)**: React web application that visualizes the processed data
-
-## Data Flow
-
-1. **Download**: Fetch CSV files from JMA and MOE websites
-2. **Process**: Transform CSV data into structured JSON using DuckDB
-3. **Generate**: Build static pages with Vike SSG
-4. **Deploy**: Serve pre-rendered HTML with data visualizations
