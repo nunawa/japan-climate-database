@@ -84,6 +84,23 @@ export default function Page() {
             </List.Item>
           </List>
         </Stack>
+
+        <Divider />
+
+        <Stack gap="md">
+          <Title size="h2">制作者</Title>
+          <Text>
+            このサイトは{" "}
+            <Anchor
+              href="https://www.nunawa.net/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              nunawa
+            </Anchor>{" "}
+            によって制作・運営されています。
+          </Text>
+        </Stack>
       </Stack>
     </Container>
   );
